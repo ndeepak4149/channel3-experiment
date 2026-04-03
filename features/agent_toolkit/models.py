@@ -25,6 +25,9 @@ class AgentDecision(BaseModel):
     alternative_ids: List[str]
     alternative_titles: List[str]
 
+    # Best offer per product (price, retailer, url) for all ranked products
+    product_offers: Dict[str, Dict]
+
     # Intelligence layers (populated based on depth)
     value_scores: Dict[str, ValueScore]              # always present
     reviews: Dict[str, ReviewIntelligence]           # standard + full

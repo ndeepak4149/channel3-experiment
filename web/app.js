@@ -129,25 +129,33 @@ function renderDecision(d) {
     </div>`;
 
   // Clickable product grid — all products
-  const allProds = [tp, ...alts.map(a => ({ id: a.id, title: a.title }))];
+  const offers   = d.product_offers || {};
+  const allProds = [tp, ...alts];
   const scored   = allProds.map(p => {
-    const v = vs[p.id] || {};
+    const v    = vs[p.id] || {};
     const deal = deals[p.id] || {};
-    return { ...p, ...v, deal_price: deal.current_price, deal_rec: deal.recommendation };
+    const off  = offers[p.id] || {};
+    return {
+      ...p, ...v,
+      price:    p.price    ?? off.price    ?? deal.current_price,
+      retailer: p.retailer ?? off.retailer,
+      url:      p.url      ?? off.url,
+    };
   }).filter(p => p.title);
 
   if (scored.length) {
     html += `<div class="section-title">All Products — click any to see details</div><div class="product-grid" id="productGrid">`;
     for (const p of scored) {
-      const tc      = tierClass(p.value_tier);
-      const isTop   = p.id === tp.id;
-      const price   = p.deal_price ? fmt(p.deal_price) : (isTop ? fmt(tp.price) : "");
+      const tc    = tierClass(p.value_tier);
+      const isTop = p.id === tp.id;
       html += `
         <div class="product-card${isTop ? " selected" : ""}" data-pid="${esc(p.id)}" style="cursor:pointer">
           <div class="product-title">${esc(p.title)}</div>
           ${p.overall_score != null ? `<div class="value-badge ${tc}">#${p.rank || "?"} · ${Math.round(p.overall_score)}/100</div>` : ""}
-          ${price ? `<div class="product-price" style="margin-top:6px">${price}</div>` : ""}
+          ${p.price    ? `<div class="product-price" style="margin-top:6px">${fmt(p.price)}</div>` : ""}
+          ${p.retailer ? `<div class="product-retailer">@ ${esc(p.retailer)}</div>` : ""}
           ${p.one_liner ? `<div style="font-size:12px;color:var(--muted);margin-top:4px">${esc(p.one_liner)}</div>` : ""}
+          ${p.url ? `<a class="buy-btn" href="${esc(p.url)}" target="_blank" rel="noopener" style="display:inline-block;margin-top:10px;font-size:12px;padding:6px 14px">Buy →</a>` : ""}
           ${isTop ? `<div style="font-size:11px;color:var(--accent);margin-top:6px;font-weight:600">✓ Top Pick</div>` : ""}
         </div>`;
     }

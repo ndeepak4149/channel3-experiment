@@ -104,9 +104,16 @@ def api_decide(req: DecideRequest):
                 "reasoning": result.top_pick_reasoning,
             },
             "alternatives": [
-                {"id": aid, "title": atitle}
+                {
+                    "id":       aid,
+                    "title":    atitle,
+                    "price":    result.product_offers.get(aid, {}).get("price"),
+                    "retailer": result.product_offers.get(aid, {}).get("retailer"),
+                    "url":      result.product_offers.get(aid, {}).get("url"),
+                }
                 for aid, atitle in zip(result.alternative_ids, result.alternative_titles)
             ],
+            "product_offers": result.product_offers,
             "value_scores": {
                 pid: {
                     "rank":          vs.rank,

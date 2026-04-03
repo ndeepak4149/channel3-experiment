@@ -121,6 +121,19 @@ def decide(
         runner_up_price = runner_best.price.price if runner_best else 0,
     )
 
+    # ── Build offers map for all ranked products ──────────────────────────────
+    product_offers: dict = {}
+    for p in products:
+        offers = p.offers or []
+        in_stock = [o for o in offers if o.availability == "InStock"]
+        best = min((in_stock or offers), key=lambda o: o.price.price) if offers else None
+        if best:
+            product_offers[p.id] = {
+                "price":    best.price.price,
+                "retailer": best.domain,
+                "url":      best.url,
+            }
+
     # ── Step 7: Update persona from top pick (if persona loaded) ──────────────
     if persona and persona_id:
         was_on_sale = bool(top_best and top_best.price.compare_at_price)
@@ -138,6 +151,7 @@ def decide(
         top_pick_reasoning   = guidance.get("top_pick_reasoning", ""),
         alternative_ids      = alt_ids,
         alternative_titles   = alt_titles,
+        product_offers       = product_offers,
         value_scores         = {vs.product_id: vs for vs in ranked.ranked},
         reviews              = review_map,
         deals                = deal_map,
