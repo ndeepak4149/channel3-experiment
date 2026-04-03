@@ -1,0 +1,62 @@
+{
+  "persona_id": "demo_user",
+  "display_name": "Demo User",
+  "created_at": "2026-04-03 09:09:35.936143+00:00",
+  "updated_at": "2026-04-03 12:27:02.685308+00:00",
+  "preferred_brands": [
+    "Nike",
+    "Apple",
+    "RETROSPEKT",
+    "Logitech",
+    "SONY",
+    "Adesso"
+  ],
+  "avoided_brands": [
+    "Generic"
+  ],
+  "price_tier": "mid",
+  "avg_spend_per_item": 135.2,
+  "deal_sensitivity": 0.33,
+  "category_affinities": {
+    "electronics": 0.667,
+    "fashion": 0.222,
+    "sports_fitness": 0.111
+  },
+  "value_priorities": [
+    "quality",
+    "price",
+    "brand",
+    "sustainability"
+  ],
+  "declared_sizes": {
+    "shoes_us": "11",
+    "shirt": "L"
+  },
+  "interaction_count": 9,
+  "brand_counts": {
+    "RETROSPEKT": 1,
+    "Nike": 3,
+    "Apple": 2,
+    "Logitech": 1,
+    "SONY": 1,
+    "Adesso": 1
+  },
+  "category_counts": {
+    "electronics": 6,
+    "fashion": 2,
+    "sports_fitness": 1
+  },
+  "price_history": [
+    49.0,
+    75.0,
+    280.49,
+    110.0,
+    12.34,
+    60.0,
+    12.7,
+    68.28,
+    549.0
+  ],
+  "on_sale_picks": 3,
+  "total_picks": 9
+}

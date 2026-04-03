@@ -1,0 +1,68 @@
+{
+  "product_id": "brefMev",
+  "product_title": "Marshall Willen Bluetooth Portable Bluetooth Speaker",
+  "aggregate_score": 72,
+  "total_sources": 6,
+  "consensus_summary": "The Marshall Willen is praised for its stylish design and impressive sound quality for its compact size, featuring good clarity and instrument separation. Reviewers appreciate its portability and aesthetic appeal. The speaker delivers surprisingly good audio punch through passive radiators, making it suitable for personal use, though some question value compared to cheaper alternatives.",
+  "pros": [
+    "Excellent clarity and instrument separation for size",
+    "Stylish, distinctive aesthetic design",
+    "Compact and truly portable",
+    "Good bass and punch from passive radiators",
+    "Rugged build quality"
+  ],
+  "cons": [
+    "Premium pricing versus comparable alternatives",
+    "Limited power for larger spaces",
+    "May not justify cost for budget-conscious buyers"
+  ],
+  "red_flags": [],
+  "sources": [
+    {
+      "platform": "reddit",
+      "url": "https://www.reddit.com/r/Bluetooth_Speakers/comments/166ixjv/the_marshall_willen_is_kiff/",
+      "snippet": "Just got the Marshall Willen today as a small portable speaker and wow! I was literally blown away by the clarity and instrument seperation. Style wise it looks absolutely dope and anyone looking for ",
+      "sentiment": 0.95,
+      "date": null
+    },
+    {
+      "platform": "reddit",
+      "url": "https://redditrecs.com/portable-bluetooth-speaker/model/marshall-willen/",
+      "snippet": "Based on 1 year's data from Mar 16, 2026 How it works Detailed Summary discreetchronicles 1.0 r/Bluetooth_Speakers \u2022 Pocket (mini) Size Portable Speaker for Outdoor Use? \u2192 6 months ago",
+      "sentiment": 0.0,
+      "date": null
+    },
+    {
+      "platform": "reddit",
+      "url": "https://www.soundguys.com/marshall-willen-review-113565/",
+      "snippet": "Large Bluetooth speakers can get heavy. Find out how to keep your tunes portable with the Marshall Willen Bluetooth speaker.",
+      "sentiment": 0.4,
+      "date": null
+    },
+    {
+      "platform": "reddit",
+      "url": "https://www.tomsguide.com/audio/marshall-willen-ii-review-rugged-rockin-fun",
+      "snippet": "The Marshall Willen II brings a touch of style to the ultra-portable Bluetooth speaker market, and packs in some surprisingly good sound into a small package.",
+      "sentiment": 0.75,
+      "date": null
+    },
+    {
+      "platform": "reddit",
+      "url": "https://www.reddit.com/r/Bluetooth_Speakers/comments/yg0mo6/are_marshall_speakers_worth_it/",
+      "snippet": "Are Marshall Speakers Worth It? I personally love the aesthetic of Marshall products, but are the bluetooth speakers from them worth the price? I know there are probably many other BT speakers that ar",
+      "sentiment": 0.3,
+      "date": null
+    },
+    {
+      "platform": "reddit",
+      "url": "https://www.reddit.com/r/Bluetooth_Speakers/comments/10uatni/should_i_buy_marshall_willen/",
+      "snippet": "List of speakers with bluetooth built inside. From mini bluetooth speakers, to really large bluetooth speakers. We have them all listed here.",
+      "sentiment": 0.0,
+      "date": null
+    }
+  ],
+  "confidence": 0.45,
+  "last_updated": "2026-04-03 12:25:44.257895+00:00",
+  "source_mode": "web+llm",
+  "_cached_at": 1775219144.2580218
+}

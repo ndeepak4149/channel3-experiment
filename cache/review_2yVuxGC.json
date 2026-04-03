@@ -1,0 +1,33 @@
+{
+  "product_id": "2yVuxGC",
+  "product_title": "Beats Solo3 Wireless Headphones",
+  "aggregate_score": 72,
+  "total_sources": 0,
+  "consensus_summary": "Beats Solo3 Wireless headphones are well-regarded for their sleek design, comfortable fit, and reliable wireless connectivity with up to 40 hours of battery life. Users appreciate the sound quality and brand integration with Apple devices, though some criticize the audio tuning as bass-heavy and pricing as premium. Build quality is generally solid, though durability concerns arise with hinges and cable connections over time.",
+  "pros": [
+    "Excellent battery life (40+ hours per charge)",
+    "Comfortable fit for extended wearing",
+    "Seamless pairing with Apple devices",
+    "Sleek, stylish design in multiple colors",
+    "Good noise isolation in passive mode",
+    "Lightweight and portable"
+  ],
+  "cons": [
+    "Bass-heavy sound signature not for all listeners",
+    "Premium pricing relative to competitors",
+    "Limited active noise cancellation features",
+    "Plastic build feels less premium than price suggests",
+    "Earcup swivel hinges prone to loosening",
+    "No app for audio customization"
+  ],
+  "red_flags": [
+    "Hinge durability issues reported after 1-2 years",
+    "Cable connector quality concerns on older models",
+    "Declining audio quality perceived after firmware updates"
+  ],
+  "sources": [],
+  "confidence": 0.76,
+  "last_updated": "2026-04-03 08:43:35.954233+00:00",
+  "source_mode": "llm-knowledge",
+  "_cached_at": 1775205815.954299
+}

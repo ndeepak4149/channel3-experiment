@@ -1,0 +1,36 @@
+{
+  "product_id": "bFyapZK",
+  "product_title": "Sony Wh-1000xm6 Wireless Noise Canceling Headphones",
+  "aggregate_score": 87,
+  "total_sources": 0,
+  "consensus_summary": "The Sony WH-1000XM6 are widely regarded as premium noise-canceling headphones with excellent ANC performance, sound quality, and comfort for extended wear. Users praise the improved design and features over predecessors, though some find the premium price justified only for specific use cases. Battery life and call quality are generally strong, with minor complaints about Bluetooth connectivity in certain scenarios.",
+  "pros": [
+    "Industry-leading active noise cancellation performance",
+    "Lightweight design with improved comfort for long sessions",
+    "Excellent sound quality with customizable EQ",
+    "Outstanding battery life up to 24 hours",
+    "Effective touch controls and intuitive interface",
+    "Multipoint Bluetooth connection capability",
+    "Clear microphone for calls and voice commands",
+    "Premium build quality and materials"
+  ],
+  "cons": [
+    "Expensive compared to competing options",
+    "Learning curve with touch control gestures",
+    "Limited EQ presets in companion app",
+    "Occasional Bluetooth connectivity drops reported",
+    "Case could be more compact",
+    "Treble can sound slightly harsh at high volumes",
+    "No significant leap from XM5 model"
+  ],
+  "red_flags": [
+    "Sporadic Bluetooth connection drops in some users' experience",
+    "Touch controls sometimes register unintended gestures",
+    "Premium pricing may not justify incremental upgrades from XM5"
+  ],
+  "sources": [],
+  "confidence": 0.78,
+  "last_updated": "2026-04-03 08:41:33.052254+00:00",
+  "source_mode": "llm-knowledge",
+  "_cached_at": 1775205693.052354
+}

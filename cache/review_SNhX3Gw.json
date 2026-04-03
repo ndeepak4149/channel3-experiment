@@ -1,0 +1,30 @@
+{
+  "product_id": "SNhX3Gw",
+  "product_title": "Smart True Hepa Air Purifier With App Control (covers Up To 770 Sq Ft)",
+  "aggregate_score": 72,
+  "total_sources": 0,
+  "consensus_summary": "This Nordstrom smart air purifier receives generally positive reviews for its large coverage area, effective HEPA filtration, and convenient app control features. Users appreciate the quiet operation and air quality monitoring capabilities. Some concerns exist around filter replacement costs and occasional connectivity issues with the app.",
+  "pros": [
+    "Covers large 770 sq ft area effectively",
+    "True HEPA filtration captures allergens and particles",
+    "App control and monitoring features convenient",
+    "Quiet operation suitable for bedrooms",
+    "Air quality real-time feedback display"
+  ],
+  "cons": [
+    "Expensive replacement filters required frequently",
+    "App connectivity issues reported occasionally",
+    "Initial setup can be complicated",
+    "Higher noise on maximum fan speed",
+    "Large footprint takes significant space"
+  ],
+  "red_flags": [
+    "App disconnection problems affecting remote control reliability",
+    "High ongoing filter costs may deter budget users"
+  ],
+  "sources": [],
+  "confidence": 0.62,
+  "last_updated": "2026-04-03 08:45:47.455417+00:00",
+  "source_mode": "llm-knowledge",
+  "_cached_at": 1775205947.4554932
+}

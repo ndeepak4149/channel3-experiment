@@ -1,0 +1,29 @@
+{
+  "product_id": "tuEkVuD",
+  "product_title": "Reebok Yoga Mat - Black",
+  "aggregate_score": 72,
+  "total_sources": 0,
+  "consensus_summary": "Reebok yoga mats receive generally positive reviews for their affordability and decent build quality. Users appreciate the non-slip surface and adequate cushioning for basic yoga practice. However, some report durability concerns with long-term use and occasional off-gassing odors initially.",
+  "pros": [
+    "Affordable price point for quality mat",
+    "Non-slip surface provides good grip",
+    "Adequate cushioning for joints",
+    "Lightweight and easy to transport",
+    "Good for beginners and casual practitioners"
+  ],
+  "cons": [
+    "Durability concerns reported after extended use",
+    "Can develop odor from rubber materials initially",
+    "May compress over time with regular use",
+    "Less premium feel than higher-end brands",
+    "Limited color options available"
+  ],
+  "red_flags": [
+    "Some users report mat thinning/compression after 6-12 months of regular use"
+  ],
+  "sources": [],
+  "confidence": 0.62,
+  "last_updated": "2026-04-03 08:44:59.807855+00:00",
+  "source_mode": "llm-knowledge",
+  "_cached_at": 1775205899.807936
+}

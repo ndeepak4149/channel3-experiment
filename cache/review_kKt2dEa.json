@@ -1,0 +1,30 @@
+{
+  "product_id": "kKt2dEa",
+  "product_title": "Adidas Resistance Bands",
+  "aggregate_score": 72,
+  "total_sources": 0,
+  "consensus_summary": "Adidas resistance bands are generally well-regarded for their durability and brand reliability, appealing to fitness enthusiasts at multiple levels. Users appreciate the quality materials and versatility for strength training and rehabilitation. However, some report inconsistent resistance levels across sets and limited instructional guidance for beginners.",
+  "pros": [
+    "Durable, high-quality latex/rubber materials resist tearing",
+    "Versatile for strength training, physical therapy, and flexibility work",
+    "Trusted Adidas brand quality and construction",
+    "Good value for price compared to premium fitness brands",
+    "Multiple resistance levels available for progressive training"
+  ],
+  "cons": [
+    "Resistance levels may vary inconsistently between individual bands",
+    "Limited exercise guide or instructional content included",
+    "Some users report slight latex smell initially",
+    "Band rolling or curling at edges over time",
+    "Sizing/thickness choices unclear for beginners selecting appropriate level"
+  ],
+  "red_flags": [
+    "Inconsistent resistance calibration between units in same set",
+    "Durability concerns with frequent use over extended periods"
+  ],
+  "sources": [],
+  "confidence": 0.68,
+  "last_updated": "2026-04-03 12:33:38.331011+00:00",
+  "source_mode": "llm-knowledge",
+  "_cached_at": 1775219618.3312829
+}

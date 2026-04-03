@@ -1,0 +1,35 @@
+{
+  "product_id": "QfUGnGC",
+  "product_title": "Beats Studio Pro Headphones - Black",
+  "aggregate_score": 72,
+  "total_sources": 0,
+  "consensus_summary": "Beats Studio Pro headphones are well-regarded for their premium build quality, effective noise cancellation, and balanced audio profile. Users appreciate the comfortable fit and seamless Apple ecosystem integration, though some note the high price point and limited customization options. Battery life and sound quality receive consistent praise, but a few users report connectivity issues.",
+  "pros": [
+    "Excellent active noise cancellation performance",
+    "Comfortable fit for extended wearing sessions",
+    "Premium build quality and materials",
+    "Seamless integration with Apple devices",
+    "Good battery life, around 40 hours",
+    "Clear, balanced sound signature",
+    "Intuitive touch controls",
+    "Lightweight design"
+  ],
+  "cons": [
+    "Premium pricing compared to competitors",
+    "Limited sound profile customization options",
+    "Average microphone quality for calls",
+    "Occasional Bluetooth connectivity hiccups",
+    "Case could be more compact",
+    "Not ideal for very bass-heavy music",
+    "Limited color options"
+  ],
+  "red_flags": [
+    "Some users report occasional disconnection issues with non-Apple devices",
+    "Higher price tag may not justify improvements over previous generation"
+  ],
+  "sources": [],
+  "confidence": 0.68,
+  "last_updated": "2026-04-03 08:40:01.979088+00:00",
+  "source_mode": "llm-knowledge",
+  "_cached_at": 1775205601.979143
+}

@@ -1,0 +1,35 @@
+{
+  "product_id": "I9lbWIh",
+  "product_title": "Jbl Tune 670nc Adaptive Noise Cancelling Wireless On-ear Headphones",
+  "aggregate_score": 72,
+  "total_sources": 0,
+  "consensus_summary": "The JBL Tune 670NC offers solid value for budget-conscious buyers seeking active noise cancelling headphones. Users praise the comfortable fit, decent sound quality, and effective noise cancellation for the price point. However, some report inconsistent ANC performance and build quality concerns that limit its appeal against slightly pricier competitors.",
+  "pros": [
+    "Comfortable on-ear design suitable for extended wear",
+    "Effective adaptive noise cancellation at this price",
+    "Good battery life (up to 35 hours claimed)",
+    "Lightweight and portable design",
+    "Decent sound signature with reasonable clarity",
+    "Works well for calls and video conferencing",
+    "Affordable entry-level ANC option"
+  ],
+  "cons": [
+    "ANC performance inconsistent across different frequencies",
+    "Build quality feels plasticky and somewhat fragile",
+    "Sound lacks depth compared to higher-end models",
+    "Controls can be unintuitive for some users",
+    "Bluetooth connectivity occasional dropout issues",
+    "Limited app features and customization options",
+    "Noise isolation weaker than over-ear alternatives"
+  ],
+  "red_flags": [
+    "Reports of headband cracking or breaking after moderate use",
+    "ANC can worsen audio quality when activated",
+    "Some units experience connectivity stability problems"
+  ],
+  "sources": [],
+  "confidence": 0.68,
+  "last_updated": "2026-04-03 08:39:44.500836+00:00",
+  "source_mode": "llm-knowledge",
+  "_cached_at": 1775205584.5010188
+}

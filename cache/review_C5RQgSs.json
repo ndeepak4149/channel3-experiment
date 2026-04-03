@@ -1,0 +1,37 @@
+{
+  "product_id": "C5RQgSs",
+  "product_title": "Airpods Max Wireless Active Noise Canceling Over-ear Headphones",
+  "aggregate_score": 78,
+  "total_sources": 0,
+  "consensus_summary": "AirPods Max are premium over-ear headphones praised for exceptional build quality, spatial audio, and seamless Apple ecosystem integration. However, their $549 price point and limited cross-platform functionality are significant drawbacks. Sound quality is excellent but not universally considered best-in-class for the price, and some users report comfort issues during extended wear.",
+  "pros": [
+    "Premium aluminum and stainless steel construction feels luxurious",
+    "Excellent spatial audio with dynamic head tracking",
+    "Seamless integration with Apple devices and iCloud",
+    "Industry-leading active noise cancellation performance",
+    "High-quality audio codec and lossless support",
+    "Beautiful industrial design with attention to detail",
+    "Adaptive audio modes respond to environment",
+    "Strong battery life, 20+ hours with ANC"
+  ],
+  "cons": [
+    "Very expensive at $549 price point",
+    "Limited functionality on non-Apple devices",
+    "Heavy headphones cause discomfort after 2-3 hours",
+    "No native codec support for Android devices",
+    "Digital crown can be finicky to control",
+    "Expensive replacement parts and repairs",
+    "Sound signature may not suit all music genres",
+    "No wired audio jack option available"
+  ],
+  "red_flags": [
+    "Reported comfort/weight issues during extended listening sessions",
+    "Expensive repair costs if anything breaks after warranty",
+    "Significant price premium over competing options with similar features"
+  ],
+  "sources": [],
+  "confidence": 0.78,
+  "last_updated": "2026-04-03 12:26:25.532836+00:00",
+  "source_mode": "llm-knowledge",
+  "_cached_at": 1775219185.533001
+}

@@ -1,0 +1,35 @@
+{
+  "persona_id": "default_user",
+  "display_name": "My Profile",
+  "created_at": "2026-04-03 12:32:48.595287+00:00",
+  "updated_at": "2026-04-03 12:33:30.686902+00:00",
+  "preferred_brands": [
+    "Adidas"
+  ],
+  "avoided_brands": [],
+  "price_tier": "budget",
+  "avg_spend_per_item": 16.99,
+  "deal_sensitivity": 0.0,
+  "category_affinities": {
+    "sports_fitness": 1.0
+  },
+  "value_priorities": [
+    "price",
+    "quality",
+    "sustainability",
+    "brand"
+  ],
+  "declared_sizes": {},
+  "interaction_count": 1,
+  "brand_counts": {
+    "Adidas": 1
+  },
+  "category_counts": {
+    "sports_fitness": 1
+  },
+  "price_history": [
+    16.99
+  ],
+  "on_sale_picks": 0,
+  "total_picks": 1
+}

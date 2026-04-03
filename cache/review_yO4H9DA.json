@@ -1,0 +1,35 @@
+{
+  "product_id": "yO4H9DA",
+  "product_title": "Apple Airpods Max Wireless Bluetooth Stereo Headphones, Silver (mgyj3am/a)",
+  "aggregate_score": 78,
+  "total_sources": 0,
+  "consensus_summary": "AirPods Max are premium wireless headphones praised for excellent sound quality, seamless Apple ecosystem integration, and effective spatial audio with head tracking. However, the $549 price point, limited battery life (~20 hours), and lack of native support for non-Apple devices create hesitation among potential buyers. The device is considered a luxury option rather than best-in-class at any single metric.",
+  "pros": [
+    "Excellent sound quality with rich bass and clear vocals",
+    "Seamless integration with Apple ecosystem and devices",
+    "Impressive spatial audio with dynamic head tracking",
+    "Premium build quality and comfortable fit for most users",
+    "Strong active noise cancellation performance",
+    "Intuitive controls via Digital Crown interface",
+    "Quick pairing across multiple Apple devices"
+  ],
+  "cons": [
+    "Very high price ($549) limits mainstream appeal",
+    "Battery life around 20 hours is modest for premium device",
+    "Heavy and bulky design may fatiguen during extended wear",
+    "Included Smart Case is basic for the price",
+    "Limited third-party device compatibility and features",
+    "No audio jack or wired fallback option",
+    "Warranty repair costs potentially expensive"
+  ],
+  "red_flags": [
+    "Reports of discomfort during extended use (2+ hours) for some users",
+    "Limited warranty coverage for accidental damage",
+    "Significant price premium over competitors with similar specs"
+  ],
+  "sources": [],
+  "confidence": 0.72,
+  "last_updated": "2026-04-03 08:34:59.353008+00:00",
+  "source_mode": "llm-knowledge",
+  "_cached_at": 1775205299.3532019
+}
