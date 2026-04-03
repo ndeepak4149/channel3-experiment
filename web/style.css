@@ -348,7 +348,8 @@ body {
   transition: border-color .15s;
 }
 
-.product-card:hover { border-color: var(--accent); }
+.product-card:hover    { border-color: var(--accent); }
+.product-card.selected { border-color: var(--accent); background: rgba(99,102,241,.06); }
 
 .product-card-img {
   width: 100%;

@@ -88,27 +88,6 @@ document.querySelectorAll(".chip").forEach(chip => {
   });
 });
 
-async function runSearch() {
-  const intent = searchInput.value.trim();
-  if (!intent) return;
-
-  setLoading(searchBtn, true, "Searching...");
-  searchResults.classList.remove("hidden");
-  searchResults.innerHTML = renderSkeletons();
-
-  try {
-    const data = await api("/api/decide", {
-      method: "POST",
-      body: JSON.stringify({ intent, depth: currentDepth, persona_id: personaId }),
-    });
-    searchResults.innerHTML = renderDecision(data);
-  } catch (err) {
-    searchResults.innerHTML = `<div class="notice error">Error: ${esc(err.message)}</div>`;
-  } finally {
-    setLoading(searchBtn, false);
-  }
-}
-
 function renderSkeletons() {
   return `
     <div class="skeleton skeleton-card"></div>
@@ -119,7 +98,11 @@ function renderSkeletons() {
     </div>`;
 }
 
+// Store full decision data for interactive product selection
+let _lastDecision = null;
+
 function renderDecision(d) {
+  _lastDecision = d;
   const tp    = d.top_pick || {};
   const conf  = d.purchase_confidence || 0;
   const alts  = d.alternatives || [];
@@ -128,10 +111,6 @@ function renderDecision(d) {
   const deals = d.deals || {};
   const comp  = d.comparison;
   const fuqs  = d.follow_up_questions || [];
-
-  // Top pick
-  const topRev  = revs[tp.id]  || {};
-  const topDeal = deals[tp.id] || {};
 
   let html = `
     <div class="top-pick-card">
@@ -149,68 +128,34 @@ function renderDecision(d) {
       ${tp.url ? `<a class="buy-btn" href="${esc(tp.url)}" target="_blank" rel="noopener">Buy now →</a>` : ""}
     </div>`;
 
-  // Alternatives + value scores grid
+  // Clickable product grid — all products
   const allProds = [tp, ...alts.map(a => ({ id: a.id, title: a.title }))];
   const scored   = allProds.map(p => {
     const v = vs[p.id] || {};
-    return { ...p, ...v };
+    const deal = deals[p.id] || {};
+    return { ...p, ...v, deal_price: deal.current_price, deal_rec: deal.recommendation };
   }).filter(p => p.title);
 
   if (scored.length) {
-    html += `<div class="section-title">All Products</div><div class="product-grid">`;
+    html += `<div class="section-title">All Products — click any to see details</div><div class="product-grid" id="productGrid">`;
     for (const p of scored) {
-      const tc   = tierClass(p.value_tier);
-      const tier = p.value_tier || "";
-      const rev  = revs[p.id];
-      const img  = "";   // images not returned by /decide; shown when using /search
+      const tc      = tierClass(p.value_tier);
+      const isTop   = p.id === tp.id;
+      const price   = p.deal_price ? fmt(p.deal_price) : (isTop ? fmt(tp.price) : "");
       html += `
-        <div class="product-card">
+        <div class="product-card${isTop ? " selected" : ""}" data-pid="${esc(p.id)}" style="cursor:pointer">
           <div class="product-title">${esc(p.title)}</div>
-          ${p.overall_score != null ? `<div class="value-badge ${tc}">#${p.rank || "?"} · ${Math.round(p.overall_score)}/100 ${tier}</div>` : ""}
-          ${p.one_liner ? `<div style="font-size:12px;color:var(--muted);margin-bottom:6px">${esc(p.one_liner)}</div>` : ""}
-          ${rev ? `<div style="font-size:12px;color:var(--muted)">Reviews: ${rev.aggregate_score}/100</div>` : ""}
+          ${p.overall_score != null ? `<div class="value-badge ${tc}">#${p.rank || "?"} · ${Math.round(p.overall_score)}/100</div>` : ""}
+          ${price ? `<div class="product-price" style="margin-top:6px">${price}</div>` : ""}
+          ${p.one_liner ? `<div style="font-size:12px;color:var(--muted);margin-top:4px">${esc(p.one_liner)}</div>` : ""}
+          ${isTop ? `<div style="font-size:11px;color:var(--accent);margin-top:6px;font-weight:600">✓ Top Pick</div>` : ""}
         </div>`;
     }
     html += `</div>`;
   }
 
-  // Reviews + Deal panels (top pick)
-  const hasReview = Object.keys(revs).length > 0;
-  const hasDeal   = Object.keys(deals).length > 0;
-
-  if (hasReview || hasDeal) {
-    html += `<div class="panels-row">`;
-
-    if (hasReview && topRev.aggregate_score != null) {
-      html += `
-        <div class="panel">
-          <div class="panel-title">⭐ Review Intelligence</div>
-          <div class="score-bar-row">
-            <div class="score-bar"><div class="score-fill" style="width:${topRev.aggregate_score}%"></div></div>
-            <span class="score-val">${topRev.aggregate_score}/100</span>
-          </div>
-          <p style="font-size:12.5px;color:var(--muted);margin-bottom:10px">${esc(topRev.consensus_summary || "")}</p>
-          <div class="pros-cons">
-            <ul class="pros-list"><strong>Pros</strong>${(topRev.pros || []).slice(0,3).map(p => `<li>${esc(p)}</li>`).join("")}</ul>
-            <ul class="cons-list"><strong>Cons</strong>${(topRev.cons || []).slice(0,3).map(c => `<li>${esc(c)}</li>`).join("")}</ul>
-          </div>
-          ${(topRev.red_flags || []).length ? `<p style="font-size:12px;color:var(--red);margin-top:8px">⚠ ${esc(topRev.red_flags[0])}</p>` : ""}
-        </div>`;
-    }
-
-    if (hasDeal && topDeal.recommendation) {
-      html += `
-        <div class="panel">
-          <div class="panel-title">💰 Deal Intelligence</div>
-          <div class="deal-rec ${topDeal.recommendation}">${dealIcon(topDeal.recommendation)}</div>
-          <p class="deal-reasoning">${esc(topDeal.reasoning || "")}</p>
-          ${topDeal.discount_pct ? `<p style="font-size:12.5px;margin-top:6px">Discount: <strong>${Math.round(topDeal.discount_pct)}% off</strong></p>` : ""}
-          ${topDeal.next_likely_sale ? `<p style="font-size:12.5px;color:var(--muted)">Next sale: ${esc(topDeal.next_likely_sale)} (~${topDeal.days_to_sale} days)</p>` : ""}
-        </div>`;
-    }
-
-    html += `</div>`;
-  }
+  // Detail panel — shown for whichever product is selected
+  html += `<div id="productDetail"></div>`;
 
   // Comparison (full depth)
   if (comp) {
@@ -241,6 +186,100 @@ function renderDecision(d) {
   }
 
   return html;
+}
+
+function renderProductDetail(pid) {
+  const d     = _lastDecision;
+  const tp    = d.top_pick || {};
+  const revs  = d.reviews || {};
+  const deals = d.deals   || {};
+  const alts  = d.alternatives || [];
+
+  const allProds = [tp, ...alts.map(a => ({ id: a.id, title: a.title }))];
+  const prod  = allProds.find(p => p.id === pid) || {};
+  const rev   = revs[pid]  || {};
+  const deal  = deals[pid] || {};
+  const isTop = pid === tp.id;
+
+  const hasReview = rev.aggregate_score != null;
+  const hasDeal   = !!deal.recommendation;
+
+  if (!hasReview && !hasDeal) return "";
+
+  let html = `<div class="panels-row" style="margin-top:4px">`;
+
+  if (hasReview) {
+    html += `
+      <div class="panel">
+        <div class="panel-title">⭐ Reviews — ${esc(prod.title || "").substring(0, 40)}</div>
+        <div class="score-bar-row">
+          <div class="score-bar"><div class="score-fill" style="width:${rev.aggregate_score}%"></div></div>
+          <span class="score-val">${rev.aggregate_score}/100</span>
+        </div>
+        <p style="font-size:12.5px;color:var(--muted);margin-bottom:10px">${esc(rev.consensus_summary || "")}</p>
+        <div class="pros-cons">
+          <ul class="pros-list"><strong>Pros</strong>${(rev.pros || []).slice(0,3).map(p => `<li>${esc(p)}</li>`).join("")}</ul>
+          <ul class="cons-list"><strong>Cons</strong>${(rev.cons || []).slice(0,3).map(c => `<li>${esc(c)}</li>`).join("")}</ul>
+        </div>
+        ${(rev.red_flags || []).length ? `<p style="font-size:12px;color:var(--red);margin-top:8px">⚠ ${esc(rev.red_flags[0])}</p>` : ""}
+      </div>`;
+  }
+
+  if (hasDeal) {
+    html += `
+      <div class="panel">
+        <div class="panel-title">💰 Deal Intel — ${esc(prod.title || "").substring(0, 40)}</div>
+        <div class="deal-rec ${deal.recommendation}">${dealIcon(deal.recommendation)}</div>
+        <p class="deal-reasoning">${esc(deal.reasoning || "")}</p>
+        ${deal.current_price ? `<p style="font-size:13px;margin-top:6px">Price: <strong>${fmt(deal.current_price)}</strong></p>` : ""}
+        ${deal.discount_pct  ? `<p style="font-size:12.5px">Discount: <strong>${Math.round(deal.discount_pct)}% off</strong></p>` : ""}
+        ${deal.next_likely_sale ? `<p style="font-size:12.5px;color:var(--muted)">Next sale: ${esc(deal.next_likely_sale)} (~${deal.days_to_sale} days)</p>` : ""}
+        ${isTop && tp.url ? `<a class="buy-btn" href="${esc(tp.url)}" target="_blank" rel="noopener" style="display:inline-block;margin-top:10px">Buy now →</a>` : ""}
+      </div>`;
+  }
+
+  html += `</div>`;
+  return html;
+}
+
+// Wire up product card clicks (delegated from searchResults)
+searchResults.addEventListener("click", e => {
+  const card = e.target.closest(".product-card[data-pid]");
+  if (!card) return;
+  const pid = card.dataset.pid;
+
+  // Highlight selected card
+  document.querySelectorAll(".product-card[data-pid]").forEach(c => c.classList.remove("selected"));
+  card.classList.add("selected");
+
+  // Render detail panel
+  const detail = document.getElementById("productDetail");
+  if (detail) detail.innerHTML = renderProductDetail(pid);
+});
+
+// ── Render detail for top pick on load (after HTML is injected)
+async function runSearch() {
+  const intent = searchInput.value.trim();
+  if (!intent) return;
+
+  setLoading(searchBtn, true, "Searching...");
+  searchResults.classList.remove("hidden");
+  searchResults.innerHTML = renderSkeletons();
+
+  try {
+    const data = await api("/api/decide", {
+      method: "POST",
+      body: JSON.stringify({ intent, depth: currentDepth, persona_id: personaId }),
+    });
+    searchResults.innerHTML = renderDecision(data);
+    // Auto-show top pick detail
+    const detail = document.getElementById("productDetail");
+    if (detail && data.top_pick) detail.innerHTML = renderProductDetail(data.top_pick.id);
+  } catch (err) {
+    searchResults.innerHTML = `<div class="notice error">Error: ${esc(err.message)}</div>`;
+  } finally {
+    setLoading(searchBtn, false);
+  }
 }
 
 // ── BASKET TAB ────────────────────────────────────────────────────────────────
