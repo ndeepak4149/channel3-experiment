@@ -6,7 +6,7 @@
 
 const API_BASE = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
   ? "http://localhost:8000"
-  : (window.__C4_API__ || "https://channel4-api.up.railway.app"); // ← update after Railway deploy
+  : "https://web-production-1a439.up.railway.app";
 
 // ── State ─────────────────────────────────────────────────────────────────────
 let basketItems  = [];       // array of query strings
