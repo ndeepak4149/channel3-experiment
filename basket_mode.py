@@ -12,6 +12,7 @@ Commands:
   remove <n>       Remove item #n from basket
   optimize         Run the cross-retailer optimizer
   clear            Empty the basket
+  help / ?         Show this help message
   quit / exit      Exit
 """
 import os
@@ -29,11 +30,21 @@ basket: list = []   # list of ProductDetail objects
 
 # ── Display helpers ───────────────────────────────────────────────────────────
 
+def _get_best_price_info(p) -> str:
+    """Helper to find and format the best price for a product."""
+    offers = p.offers or []
+    in_stock = [o for o in offers if o.availability == "InStock"]
+    pool = in_stock or offers
+    if not pool:
+        return "N/A"
+    best = min(pool, key=lambda o: o.price.price)
+    return f"${best.price.price:.2f} @ {best.domain}"
+
+
 def print_header():
-    print("\n╔══════════════════════════════════════════════════════════╗")
-    print("║         CHANNEL4 — BASKET OPTIMIZER MODE                ║")
-    print("╚══════════════════════════════════════════════════════════╝")
-    print("  Add items with a search query, then type 'optimize'\n")
+    print("\n🛒  CHANNEL4 BASKET OPTIMIZER")
+    print("─" * 64)
+    print("  Type a product to search, 'optimize' to run, or 'help' for commands.\n")
 
 
 def print_basket():
@@ -44,11 +55,7 @@ def print_basket():
     print(f"  {'#':<3} {'PRODUCT':<45} {'BEST PRICE'}")
     print(f"  {'─'*3} {'─'*45} {'─'*12}")
     for i, p in enumerate(basket, 1):
-        offers  = p.offers or []
-        in_stock = [o for o in offers if o.availability == "InStock"]
-        pool     = in_stock or offers
-        best     = min(pool, key=lambda o: o.price.price) if pool else None
-        price    = f"${best.price.price:.2f} @ {best.domain}" if best else "N/A"
+        price = _get_best_price_info(p)
         print(f"  {i:<3} {p.title[:45]:<45} {price}")
     print()
 
@@ -56,11 +63,8 @@ def print_basket():
 def print_search_results(products: list) -> list:
     print(f"\n  Found {len(products)} result{'s' if len(products) != 1 else ''}:\n")
     for i, p in enumerate(products, 1):
-        offers   = p.offers or []
-        in_stock = [o for o in offers if o.availability == "InStock"]
-        pool     = in_stock or offers
-        best     = min(pool, key=lambda o: o.price.price) if pool else None
-        price    = f"${best.price.price:.2f} @ {best.domain}" if best else "N/A"
+        price = _get_best_price_info(p)
+        offers = p.offers or []
         retailers = len(set(o.domain for o in offers))
         print(f"  [{i}] {p.title[:55]}")
         print(f"       {price}  |  {retailers} retailer{'s' if retailers != 1 else ''}")
@@ -68,52 +72,47 @@ def print_search_results(products: list) -> list:
 
 
 def print_optimization(result):
-    print("\n" + "═" * 64)
-    print("  BASKET OPTIMIZATION RESULT")
-    print("═" * 64)
+    width = 70
+    print("\n" + "═" * width)
+    print(" BASKET OPTIMIZATION RESULT ".center(width, "═"))
+    print("═" * width)
+
+    # Top-line Summary
+    print(f"\n  {'TOTAL COST:':<20} ${result.total_cost:.2f}")
+    if result.savings_vs_single > 0:
+        savings_pct = (result.savings_vs_single / result.cheapest_single_total * 100) if result.cheapest_single_total else 0
+        print(f"  {'SAVINGS:':<20} ${result.savings_vs_single:.2f} ({savings_pct:.1f}%) 💰")
+    else:
+        print(f"  {'SAVINGS:':<20} $0.00 (Single retailer is optimal)")
 
     # Per-retailer breakdown
+    print("\n" + " ORDERS ".center(width, "─"))
     for domain, summary in result.retailer_breakdown.items():
-        ship_str = f"${summary.shipping:.2f} shipping" if summary.shipping > 0 else "free shipping"
-        print(f"\n  🏪  {domain}")
+        ship_str = f"${summary.shipping:.2f}" if summary.shipping > 0 else "FREE"
+        print(f"\n  🛒 {domain.upper()} // Order Total: ${summary.order_total:.2f} (Shipping: {ship_str})")
+        print("  " + "─" * (width - 4))
         for item_title in summary.items:
-            # Find the matching basket item for price
-            match = next((it for it in result.items if it.product_title[:50] == item_title[:50]), None)
+            match = next((it for it in result.items if it.product_title == item_title), None)
             price_str = f"${match.price:.2f}" if match else ""
             disc_str  = f"  ({match.discount_pct:.0f}% off)" if match and match.discount_pct else ""
-            print(f"       • {item_title[:50]}  {price_str}{disc_str}")
-        print(f"       Subtotal: ${summary.subtotal:.2f}  +  {ship_str}  =  ${summary.order_total:.2f}")
+            print(f"    - {item_title[:width-18]} {price_str}{disc_str}")
         if summary.note:
-            print(f"       💡 {summary.note}")
-
-    # Totals
-    print(f"\n  {'─'*62}")
-    print(f"  Items subtotal : ${result.subtotal:.2f}")
-    print(f"  Total shipping : ${result.total_shipping:.2f}")
-    print(f"  TOTAL COST     : ${result.total_cost:.2f}")
-    print(f"  {'─'*62}")
-    print(f"  Cheapest single retailer ({result.cheapest_single_retailer}): ${result.cheapest_single_total:.2f}")
-    if result.savings_vs_single > 0:
-        print(f"  💰 You save    : ${result.savings_vs_single:.2f} by splitting across retailers")
-    else:
-        print(f"  ✅ Single retailer is already optimal for this basket")
+            print(f"    💡 {summary.note}")
 
     # Buy links
-    print(f"\n  {'─'*62}")
-    print("  BUY LINKS:")
-    for item in result.items:
-        disc = f"  [{item.discount_pct:.0f}% off]" if item.discount_pct else ""
-        print(f"  • {item.product_title[:42]:<44} ${item.price:.2f}{disc}")
-        print(f"    {item.product_url}")
+    if result.items:
+        print("\n" + " BUY LINKS ".center(width, "─"))
+        for item in result.items:
+            print(f"\n  {item.product_title[:width-4]}")
+            print(f"  -> ${item.price:.2f} @ {item.recommended_retailer} | {item.product_url}")
 
     # Notes
     if result.notes:
-        print(f"\n  {'─'*62}")
-        print("  TIPS:")
+        print("\n" + " TIPS ".center(width, "─"))
         for note in result.notes:
             print(f"  💡 {note}")
 
-    print("═" * 64)
+    print("\n" + "═" * width)
 
 
 # ── Main REPL ─────────────────────────────────────────────────────────────────

@@ -3,20 +3,9 @@ Use Claude to generate a structured product comparison matrix.
 Takes product data + review intelligence and outputs ComparisonAxis objects.
 """
 from __future__ import annotations
-import json
-import os
 from typing import List
 
-import anthropic
-
-_client: anthropic.Anthropic | None = None
-
-
-def _get_client() -> anthropic.Anthropic:
-    global _client
-    if _client is None:
-        _client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
-    return _client
+from features.llm_utils import get_anthropic_client, clean_and_parse_json, CLAUDE_HAIKU_MODEL
 
 
 SYSTEM_PROMPT = """You are a product comparison expert. Given structured data about 2-4 products (title, brand, price, key features, review intelligence), produce a detailed comparison.
@@ -79,18 +68,12 @@ Cons    : {', '.join(p.get('review_cons', [])[:3]) or 'N/A'}"""
         + "\n\n".join(blocks)
     )
 
-    client = _get_client()
+    client = get_anthropic_client()
     message = client.messages.create(
-        model="claude-haiku-4-5-20251001",
+        model=CLAUDE_HAIKU_MODEL,
         max_tokens=1500,
         system=SYSTEM_PROMPT,
         messages=[{"role": "user", "content": user_message}],
     )
 
-    raw = message.content[0].text.strip()
-    if raw.startswith("```"):
-        raw = raw.split("```")[1]
-        if raw.startswith("json"):
-            raw = raw[4:]
-
-    return json.loads(raw)
+    return clean_and_parse_json(message.content[0].text)

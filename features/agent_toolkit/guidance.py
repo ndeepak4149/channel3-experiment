@@ -4,18 +4,7 @@ Claude call to generate agent guidance:
   - objection_handling
   - top_pick_reasoning
 """
-from __future__ import annotations
-import json
-import os
-import anthropic
-
-_client = None
-
-def _get_client():
-    global _client
-    if _client is None:
-        _client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
-    return _client
+from features.llm_utils import get_anthropic_client, clean_and_parse_json, CLAUDE_HAIKU_MODEL
 
 
 SYSTEM = """You are a shopping assistant AI. Given a user's shopping intent and the top recommended product with its scores, generate concise agent guidance.
@@ -62,15 +51,11 @@ Runner-up: {runner_up_title} (${runner_up_price:.2f})
 
 Generate agent guidance JSON."""
 
-    msg = _get_client().messages.create(
-        model="claude-haiku-4-5-20251001",
+    client = get_anthropic_client()
+    msg = client.messages.create(
+        model=CLAUDE_HAIKU_MODEL,
         max_tokens=800,
         system=SYSTEM,
         messages=[{"role": "user", "content": user_msg}],
     )
-    raw = msg.content[0].text.strip()
-    if raw.startswith("```"):
-        raw = raw.split("```")[1]
-        if raw.startswith("json"):
-            raw = raw[4:]
-    return json.loads(raw)
+    return clean_and_parse_json(msg.content[0].text)

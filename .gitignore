@@ -1,5 +1,21 @@
-venv/
-.env
+# Python artifacts
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
+
+# Environment variables
+# Never commit this file!
+.env
+.env.*
+
+# Project-specific cache and data directories
+cache/
+personas/
+
+# IDE/Editor directories
+.vscode/
+.idea/
+
+# OS-specific files
 .DS_Store

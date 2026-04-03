@@ -2,23 +2,9 @@
 Pass raw review snippets through Claude to extract structured intelligence.
 """
 from __future__ import annotations
-import json
-import os
 from typing import List
 
-import anthropic
-
-_client: anthropic.Anthropic | None = None
-
-
-def _get_client() -> anthropic.Anthropic:
-    global _client
-    if _client is None:
-        api_key = os.getenv("ANTHROPIC_API_KEY")
-        if not api_key:
-            raise RuntimeError("ANTHROPIC_API_KEY not set in environment")
-        _client = anthropic.Anthropic(api_key=api_key)
-    return _client
+from features.llm_utils import get_anthropic_client, clean_and_parse_json, CLAUDE_HAIKU_MODEL
 
 
 SYSTEM_SNIPPET = """You are a product review analyst. Given review snippets from various sources, extract structured intelligence. Be objective and base everything strictly on the provided snippets.
@@ -51,19 +37,14 @@ Rules: aggregate_score 0=hated 50=mixed 100=loved. pros/cons each ≤15 words, d
 
 
 def _call_claude(system: str, user_message: str) -> dict:
-    client = _get_client()
+    client = get_anthropic_client()
     message = client.messages.create(
-        model="claude-haiku-4-5-20251001",
+        model=CLAUDE_HAIKU_MODEL,
         max_tokens=1024,
         system=system,
         messages=[{"role": "user", "content": user_message}],
     )
-    raw = message.content[0].text.strip()
-    if raw.startswith("```"):
-        raw = raw.split("```")[1]
-        if raw.startswith("json"):
-            raw = raw[4:]
-    return json.loads(raw)
+    return clean_and_parse_json(message.content[0].text)
 
 
 def extract_review_intelligence(
