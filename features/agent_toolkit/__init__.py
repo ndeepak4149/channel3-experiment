@@ -22,6 +22,7 @@ Usage:
     print(result.purchase_confidence)
 """
 from __future__ import annotations
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Optional
 
 from channel3_sdk import Channel3
@@ -41,7 +42,7 @@ def decide(
     intent: str,
     depth: str = "standard",        # "quick" | "standard" | "full"
     persona_id: Optional[str] = None,
-    max_products: int = 8,
+    max_products: int = 14,
 ) -> AgentDecision:
     """
     Full pipeline: search → rank → enrich → compare → guide.
@@ -61,13 +62,23 @@ def decide(
     if not products:
         raise ValueError(f"No products found for intent: {intent!r}")
 
-    # ── Step 2: Review intelligence (standard + full) ─────────────────────────
+    # ── Step 2: Review intelligence (standard + full) — parallel ─────────────
     review_map = {}
     if depth in ("standard", "full"):
-        for p in products[:6]:
+        review_targets = products[:10]
+
+        def _fetch_review(p):
             brand = p.brands[0].name if p.brands else ""
-            r = get_review_intelligence(p.id, p.title, brand)
-            review_map[p.id] = r
+            return p.id, get_review_intelligence(p.id, p.title, brand)
+
+        with ThreadPoolExecutor(max_workers=6) as pool:
+            futures = {pool.submit(_fetch_review, p): p for p in review_targets}
+            for fut in as_completed(futures):
+                try:
+                    pid, r = fut.result()
+                    review_map[pid] = r
+                except Exception:
+                    pass  # skip failed reviews — don't block the pipeline
 
     review_scores = {pid: r.aggregate_score for pid, r in review_map.items()}
 
@@ -76,8 +87,8 @@ def decide(
 
     top_vs      = ranked.ranked[0]
     runner_vs   = ranked.ranked[1] if len(ranked.ranked) > 1 else None
-    alt_ids     = [vs.product_id for vs in ranked.ranked[1:4]]
-    alt_titles  = [vs.product_title for vs in ranked.ranked[1:4]]
+    alt_ids     = [vs.product_id for vs in ranked.ranked[1:9]]
+    alt_titles  = [vs.product_title for vs in ranked.ranked[1:9]]
 
     top_product = next(p for p in products if p.id == top_vs.product_id)
     top_offers  = top_product.offers or []
@@ -89,13 +100,25 @@ def decide(
     runner_in_stock = [o for o in runner_offers if o.availability == "InStock"]
     runner_best = min((runner_in_stock or runner_offers), key=lambda o: o.price.price) if runner_offers else None
 
-    # ── Step 4: Deal intelligence (standard + full) ───────────────────────────
+    # ── Step 4: Deal intelligence (standard + full) — parallel ───────────────
     deal_map = {}
     if depth in ("standard", "full"):
-        top_deal = get_deal_intelligence(client, top_product)
-        deal_map[top_vs.product_id] = top_deal
+        deal_targets = [(top_vs.product_id, top_product)]
         if runner_product:
-            deal_map[runner_vs.product_id] = get_deal_intelligence(client, runner_product)
+            deal_targets.append((runner_vs.product_id, runner_product))
+
+        def _fetch_deal(pid_prod):
+            pid, prod = pid_prod
+            return pid, get_deal_intelligence(client, prod)
+
+        with ThreadPoolExecutor(max_workers=len(deal_targets)) as pool:
+            futures = {pool.submit(_fetch_deal, t): t for t in deal_targets}
+            for fut in as_completed(futures):
+                try:
+                    pid, deal = fut.result()
+                    deal_map[pid] = deal
+                except Exception:
+                    pass
 
     # ── Step 5: Smart comparison (full only) ──────────────────────────────────
     comparison_result = None

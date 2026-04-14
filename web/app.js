@@ -8,11 +8,12 @@ const API_BASE = (window.location.hostname === "localhost" || window.location.ho
   : "https://web-production-1a439.up.railway.app";
 
 // ── State ──────────────────────────────────────────────────────────────────────
-let basketItems  = [];
-let personaId    = "default_user";
-let currentDepth = "standard";
-let msgIdCounter = 0;
-const decisions  = {};   // msgId → full decision data
+let basketItems      = [];
+let personaId        = "default_user";
+let currentDepth     = "standard";
+let msgIdCounter     = 0;
+const decisions      = {};   // msgId → full decision data
+let lastSearchIntent = null; // last resolved intent in this chat session
 
 // ── API ────────────────────────────────────────────────────────────────────────
 async function api(path, options = {}) {
@@ -360,23 +361,40 @@ chatInput.addEventListener("keydown", e => {
 sendBtn.addEventListener("click", sendMessage);
 
 async function sendMessage() {
-  const intent = chatInput.value.trim();
-  if (!intent || sendBtn.disabled) return;
+  const rawMessage = chatInput.value.trim();
+  if (!rawMessage || sendBtn.disabled) return;
 
   chatInput.value = "";
   chatInput.style.height = "auto";
   sendBtn.disabled = true;
 
-  appendUserMsg(intent);
+  appendUserMsg(rawMessage);
   appendTyping();
 
   try {
+    const body = {
+      intent:     rawMessage,
+      depth:      currentDepth,
+      persona_id: personaId,
+    };
+    // Pass the previous context so the backend can resolve a combined intent
+    if (lastSearchIntent) {
+      body.previous_intent = lastSearchIntent;
+    }
+
     const data = await api("/api/decide", {
       method: "POST",
-      body: JSON.stringify({ intent, depth: currentDepth, persona_id: personaId }),
+      body: JSON.stringify(body),
     });
+
+    // Track the resolved intent for the next follow-up
+    // Use the intent the API actually searched for (previous + current)
+    lastSearchIntent = lastSearchIntent
+      ? `${lastSearchIntent}, ${rawMessage}`
+      : rawMessage;
+
     removeTyping();
-    appendAiMsg(data, intent);
+    appendAiMsg(data, rawMessage);
   } catch (err) {
     removeTyping();
     appendErrorMsg("Something went wrong: " + err.message);
@@ -390,6 +408,7 @@ async function sendMessage() {
 function wireChips() {
   document.querySelectorAll(".chip[data-query]").forEach(chip => {
     chip.addEventListener("click", () => {
+      lastSearchIntent = null;  // chips are always fresh topics
       chatInput.value = chip.dataset.query;
       chatInput.style.height = "auto";
       sendMessage();
@@ -400,6 +419,7 @@ wireChips();
 
 // ── New chat ───────────────────────────────────────────────────────────────────
 document.getElementById("newChatBtn").addEventListener("click", () => {
+  lastSearchIntent = null;  // clear conversation context
   chatMessages.innerHTML = `
     <div class="empty-state" id="emptyState">
       <div class="empty-logo">◈</div>

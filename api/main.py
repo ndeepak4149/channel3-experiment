@@ -47,6 +47,7 @@ class DecideRequest(BaseModel):
     intent: str
     depth: str = "standard"        # quick | standard | full
     persona_id: Optional[str] = None
+    previous_intent: Optional[str] = None  # last query in the chat session
 
 class BasketRequest(BaseModel):
     queries: List[str]             # list of search queries, one per item
@@ -85,9 +86,14 @@ def api_decide(req: DecideRequest):
     """
     client = get_client()
     try:
+        # Resolve full intent: if follow-up message, combine with previous context
+        resolved_intent = req.intent
+        if req.previous_intent and req.previous_intent.strip():
+            resolved_intent = f"{req.previous_intent}, {req.intent}"
+
         result = decide(
             client     = client,
-            intent     = req.intent,
+            intent     = resolved_intent,
             depth      = req.depth,
             persona_id = req.persona_id,
         )
