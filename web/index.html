@@ -5,10 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Channel4 — AI Shopping Intelligence</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+
   <!-- Header -->
   <header class="header">
     <div class="header-inner">
@@ -16,133 +17,64 @@
         <span class="logo-icon">◈</span>
         <span class="logo-text">Channel<strong>4</strong></span>
       </div>
-      <nav class="tabs">
-        <button class="tab active" data-tab="search">Search</button>
-        <button class="tab" data-tab="basket">Basket</button>
-        <button class="tab" data-tab="compare">Compare</button>
-        <button class="tab" data-tab="persona">Profile</button>
-      </nav>
-      <div class="depth-picker">
-        <label>Depth</label>
-        <select id="depthSelect">
-          <option value="quick">Quick</option>
-          <option value="standard" selected>Standard</option>
-          <option value="full">Full</option>
-        </select>
+      <div class="header-actions">
+        <div class="depth-picker">
+          <label>Depth</label>
+          <select id="depthSelect">
+            <option value="quick">Quick</option>
+            <option value="standard" selected>Standard</option>
+            <option value="full">Full</option>
+          </select>
+        </div>
+        <button class="header-btn" id="basketToggle" title="Basket Optimizer">🛒 Basket</button>
+        <button class="header-btn" id="compareToggle" title="Compare Products">⚖️ Compare</button>
+        <button class="header-btn" id="profileToggle" title="Shopping Profile">👤 Profile</button>
+        <button class="header-btn new-chat-btn" id="newChatBtn">+ New chat</button>
       </div>
     </div>
   </header>
 
-  <main class="main">
+  <!-- Side panel overlay -->
+  <div class="side-overlay hidden" id="sideOverlay"></div>
 
-    <!-- ── SEARCH TAB ──────────────────────────────────────────── -->
-    <section class="tab-content active" id="tab-search">
-      <div class="search-hero">
+  <!-- Side panel -->
+  <div class="side-panel hidden" id="sidePanel">
+    <div class="side-panel-header">
+      <span id="sidePanelTitle">Panel</span>
+      <button class="side-close" id="sideClose">✕</button>
+    </div>
+    <div class="side-panel-body" id="sidePanelBody"></div>
+  </div>
+
+  <!-- Chat -->
+  <main class="chat-main">
+    <div class="chat-messages" id="chatMessages">
+      <div class="empty-state" id="emptyState">
+        <div class="empty-logo">◈</div>
         <h1>What are you shopping for?</h1>
-        <p>Describe what you need — Channel4 finds, ranks, and analyses the best options.</p>
-        <div class="search-bar">
-          <input id="searchInput" type="text" placeholder="e.g. wireless headphones for the gym under $150" autocomplete="off" />
-          <button id="searchBtn" class="btn-primary">
-            <span class="btn-text">Search</span>
-            <span class="btn-loader hidden">...</span>
-          </button>
-        </div>
-        <div class="example-queries">
-          <span>Try:</span>
+        <p>Describe what you need — I'll find, rank, and analyse the best options for you.</p>
+        <div class="example-chips">
+          <button class="chip" data-query="wireless headphones for the gym under $150">wireless headphones for the gym under $150</button>
+          <button class="chip" data-query="best bluetooth speaker under $100">best bluetooth speaker under $100</button>
+          <button class="chip" data-query="noise cancelling headphones for travel">noise-cancelling headphones for travel</button>
+          <button class="chip" data-query="electric standing desk">electric standing desk</button>
           <button class="chip" data-query="yoga mat for beginners">yoga mat for beginners</button>
-          <button class="chip" data-query="best bluetooth speaker under $100">bluetooth speaker under $100</button>
-          <button class="chip" data-query="noise cancelling headphones for travel">noise-cancelling headphones</button>
-          <button class="chip" data-query="standing desk electric">standing desk</button>
         </div>
       </div>
-      <div id="searchResults" class="results-area hidden"></div>
-    </section>
+    </div>
 
-    <!-- ── BASKET TAB ─────────────────────────────────────────── -->
-    <section class="tab-content" id="tab-basket">
-      <div class="basket-header">
-        <h2>Basket Optimizer</h2>
-        <p>Add items and we'll find the cheapest split across retailers — factoring in shipping.</p>
+    <!-- Input bar -->
+    <div class="chat-input-wrap">
+      <div class="chat-input-inner">
+        <textarea id="chatInput" placeholder="Ask me anything — e.g. best running shoes under $120..." rows="1" autocomplete="off"></textarea>
+        <button id="sendBtn" class="send-btn" aria-label="Send">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+          </svg>
+        </button>
       </div>
-      <div class="basket-add">
-        <input id="basketInput" type="text" placeholder="Search for an item to add..." autocomplete="off" />
-        <button id="basketAddBtn" class="btn-secondary">Add Item</button>
-      </div>
-      <div id="basketList" class="basket-list"></div>
-      <div id="basketEmpty" class="empty-state">
-        <span class="empty-icon">🛒</span>
-        <p>Your basket is empty. Add items above.</p>
-      </div>
-      <button id="basketOptimizeBtn" class="btn-primary btn-full hidden">
-        <span class="btn-text">Optimize Basket</span>
-        <span class="btn-loader hidden">Optimizing...</span>
-      </button>
-      <div id="basketResults" class="basket-results hidden"></div>
-    </section>
-
-    <!-- ── COMPARE TAB ────────────────────────────────────────── -->
-    <section class="tab-content" id="tab-compare">
-      <div class="compare-header">
-        <h2>Compare Products</h2>
-        <p>Enter 2–4 product searches and get a side-by-side intelligence breakdown.</p>
-      </div>
-      <div class="compare-inputs" id="compareInputs">
-        <input type="text" class="compare-input" placeholder="Product 1 (e.g. Sony WH-1000XM5)" />
-        <input type="text" class="compare-input" placeholder="Product 2 (e.g. Apple AirPods Max)" />
-        <input type="text" class="compare-input" placeholder="Product 3 (optional)" />
-      </div>
-      <button id="compareBtn" class="btn-primary">Compare</button>
-      <div id="compareResults" class="compare-results hidden"></div>
-    </section>
-
-    <!-- ── PERSONA TAB ────────────────────────────────────────── -->
-    <section class="tab-content" id="tab-persona">
-      <div class="persona-header">
-        <h2>Your Shopping Profile</h2>
-        <p>Channel4 learns your preferences over time and personalises results.</p>
-        <div class="persona-id-row">
-          <input id="personaIdInput" type="text" placeholder="Profile ID (e.g. your name)" value="default_user" />
-          <button id="loadPersonaBtn" class="btn-secondary">Load</button>
-        </div>
-      </div>
-      <div id="personaCard" class="persona-card hidden"></div>
-      <div class="declare-section">
-        <h3>Declare Preferences</h3>
-        <div class="declare-grid">
-          <div class="declare-row">
-            <label>Favourite brand</label>
-            <input type="text" id="declareBrandPrefer" placeholder="e.g. Nike" />
-            <button class="btn-ghost" data-declare="brand_prefer" data-source="declareBrandPrefer">Save</button>
-          </div>
-          <div class="declare-row">
-            <label>Avoid brand</label>
-            <input type="text" id="declareBrandAvoid" placeholder="e.g. Generic" />
-            <button class="btn-ghost" data-declare="brand_avoid" data-source="declareBrandAvoid">Save</button>
-          </div>
-          <div class="declare-row">
-            <label>Shoe size (US)</label>
-            <input type="text" id="declareSizeShoes" placeholder="e.g. 10" />
-            <button class="btn-ghost" data-declare="size" data-source="declareSizeShoes" data-key="shoes_us">Save</button>
-          </div>
-          <div class="declare-row">
-            <label>Shirt size</label>
-            <input type="text" id="declareSizeShirt" placeholder="e.g. M" />
-            <button class="btn-ghost" data-declare="size" data-source="declareSizeShirt" data-key="shirt">Save</button>
-          </div>
-          <div class="declare-row">
-            <label>Price tier</label>
-            <select id="declareTier">
-              <option value="budget">Budget</option>
-              <option value="mid" selected>Mid-range</option>
-              <option value="premium">Premium</option>
-            </select>
-            <button class="btn-ghost" data-declare="tier" data-source="declareTier">Save</button>
-          </div>
-        </div>
-        <div id="declareMsg" class="declare-msg hidden"></div>
-      </div>
-    </section>
-
+      <p class="input-hint">Press <kbd>Enter</kbd> to send · <kbd>Shift+Enter</kbd> for new line</p>
+    </div>
   </main>
 
   <script src="app.js"></script>
